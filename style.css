@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  text-align: center;
+}
+
+#container {
+  max-width: 600px;
+  margin: auto;
+  padding: 30px;
+}
+
+input {
+  padding: 10px;
+  font-size: 18px;
+  width: 80%;
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 18px;
+  margin: 8px;
+  cursor: pointer;
+}
+
+#alternativas button {
+  display: block;
+  width: 100%;
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>MathApp — Aprenda Matemática</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+</head>
+<body>
+
+  <div id="container">
+    <h1>MathApp</h1>
+
+    <div id="login">
+      <input id="nome" placeholder="Digite seu nome">
+      <button onclick="login()">Entrar</button>
+    </div>
+
+    <div id="game" style="display:none">
+      <h2 id="questao"></h2>
+      <div id="alternativas"></div>
+      <p id="feedback"></p>
+      <button onclick="novaQuestao()">Próxima</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
