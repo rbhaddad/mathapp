@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>MathApp — Aprenda Matemática</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathApp — Aprenda Matemática</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
 <body>
 
-  <div id="container">
-    <h1>MathApp</h1>
 
-    <div id="login">
-      <input id="nome" placeholder="Digite seu nome">
-      <button onclick="login()">Entrar</button>
-    </div>
+<div id="login" class="card">
+<h1>MathApp</h1>
+<p>Digite seu nome para começar</p>
+<input id="studentName" placeholder="Seu nome">
+<button onclick="startApp()">Entrar</button>
+</div>
 
-    <div id="game" style="display:none">
-      <h2 id="questao"></h2>
-      <div id="alternativas"></div>
-      <p id="feedback"></p>
-      <button onclick="novaQuestao()">Próxima</button>
-    </div>
-  </div>
 
-  <script src="app.js"></script>
+<div id="dashboard" class="card hidden">
+<h2 id="welcome"></h2>
+<p id="status"></p>
+<button onclick="startActivity()">Iniciar Atividade</button>
+</div>
+
+
+<div id="activity" class="card hidden">
+<h2 id="question"></h2>
+<input id="answer" placeholder="Resposta">
+<button onclick="submitAnswer()">Responder</button>
+<p id="feedback"></p>
+<button onclick="backToPanel()">Voltar ao painel</button>
+</div>
+
+
+<script src="app.js"></script>
 </body>
 </html>

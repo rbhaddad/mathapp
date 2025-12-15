@@ -1,46 +1,69 @@
-let pyodide;
-let questaoAtual;
-
-async function iniciarPy() {
-  pyodide = await loadPyodide();
-  const core = await fetch("core.py").then(r => r.text());
-  pyodide.runPython(core);
+let pyodideReady = false;
 }
 
-async function login() {
-  const nome = document.getElementById("nome").value.trim();
-  if (!nome) return;
 
-  pyodide.runPython(`estado.nome = "${nome}"; estado.carregar()`);
-  document.getElementById("login").style.display = "none";
-  document.getElementById("game").style.display = "block";
-  novaQuestao();
+initPyodide();
+
+
+function startApp() {
+const nameInput = document.getElementById('studentName');
+aluno.nome = nameInput.value.trim();
+
+
+if (!aluno.nome) {
+alert('Digite seu nome');
+return;
 }
 
-function novaQuestao() {
-  questaoAtual = pyodide.runPython(`gerar_questao()`);
-  document.getElementById("questao").innerText = questaoAtual.texto;
 
-  const div = document.getElementById("alternativas");
-  div.innerHTML = "";
+document.getElementById('login').classList.add('hidden');
+document.getElementById('dashboard').classList.remove('hidden');
+document.getElementById('welcome').innerText = `Olá, ${aluno.nome}`;
 
-  questaoAtual.alternativas.forEach(a => {
-    const btn = document.createElement("button");
-    btn.innerText = a;
-    btn.onclick = () => responder(a);
-    div.appendChild(btn);
-  });
 
-  document.getElementById("feedback").innerText = "";
+if (pyodideReady) {
+aluno.nivel = pyodide.runPython(`iniciar_aluno("${aluno.nome}")`);
 }
 
-function responder(valor) {
-  const certo = pyodide.runPython(
-    `responder("${questaoAtual.op}", ${questaoAtual.resposta}, ${valor})`
-  );
 
-  document.getElementById("feedback").innerText =
-    certo ? "✅ Correto!" : `❌ Errado! Resposta: ${questaoAtual.resposta}`;
+atualizarPainel();
 }
 
-iniciarPy();
+
+function atualizarPainel() {
+document.getElementById('status').innerText = `Nível atual: ${aluno.nivel}`;
+}
+
+
+function startActivity() {
+document.getElementById('dashboard').classList.add('hidden');
+document.getElementById('activity').classList.remove('hidden');
+
+
+const result = pyodide.runPython(`nova_pergunta()`);
+document.getElementById('question').innerText = result[0];
+respostaCorreta = result[1];
+}
+
+
+function submitAnswer() {
+const ans = parseInt(document.getElementById('answer').value);
+if (isNaN(ans)) return;
+
+
+const result = pyodide.runPython(`verificar(${ans})`);
+const correto = result[0];
+aluno.nivel = result[1];
+
+
+document.getElementById('feedback').innerText = correto
+? '✅ Resposta correta!'
+: '❌ Resposta incorreta. Tente novamente.';
+}
+
+
+function backToPanel() {
+document.getElementById('activity').classList.add('hidden');
+document.getElementById('dashboard').classList.remove('hidden');
+atualizarPainel();
+}

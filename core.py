@@ -1,75 +1,51 @@
-import random, json
-import js
+import random
 
-OPERACOES = ["adição", "subtração", "multiplicação", "divisão"]
 
-class EstadoAluno:
-    def __init__(self):
-        self.nome = ""
-        self.nivel = {op: 1 for op in OPERACOES}
-        self.historico = {op: [] for op in OPERACOES}
+class Aluno:
+def __init__(self, nome):
+self.nome = nome
+self.nivel = 1
+self.acertos = 0
+self.erros = 0
+self.historico = []
 
-    def salvar(self):
-        js.localStorage.setItem(
-            f"mathapp_{self.nome}",
-            json.dumps({
-                "nivel": self.nivel,
-                "historico": self.historico
-            })
-        )
 
-    def carregar(self):
-        dados = js.localStorage.getItem(f"mathapp_{self.nome}")
-        if dados:
-            dados = json.loads(dados)
-            self.nivel = dados["nivel"]
-            self.historico = dados["historico"]
+def gerar_pergunta(self):
+a = random.randint(1, self.nivel * 5)
+b = random.randint(1, self.nivel * 5)
+return a, b
 
-estado = EstadoAluno()
 
-def gerar_questao():
-    op = random.choice(OPERACOES)
-    n = estado.nivel[op]
+def responder(self, resposta, correta):
+if resposta == correta:
+self.acertos += 1
+self.historico.append(True)
+if self.acertos % 3 == 0:
+self.nivel += 1
+return True
+else:
+self.erros += 1
+self.historico.append(False)
+return False
 
-    if op == "adição":
-        a, b = random.randint(1, n*10), random.randint(1, n*10)
-        res = a + b
-        txt = f"{a} + {b} = ?"
 
-    elif op == "subtração":
-        a, b = random.randint(1, n*10), random.randint(1, n*10)
-        res = a - b
-        txt = f"{a} - {b} = ?"
+aluno = None
+pergunta_atual = None
 
-    elif op == "multiplicação":
-        a, b = random.randint(1, n+5), random.randint(1, n+5)
-        res = a * b
-        txt = f"{a} × {b} = ?"
 
-    elif op == "divisão":
-        b = random.randint(1, n+5)
-        res = random.randint(1, n+5)
-        a = b * res
-        txt = f"{a} ÷ {b} = ?"
+def iniciar_aluno(nome):
+global aluno
+aluno = Aluno(nome)
+return aluno.nivel
 
-    alternativas = {res}
-    while len(alternativas) < 4:
-        alternativas.add(res + random.randint(-5, 5))
 
-    return {
-        "op": op,
-        "texto": txt,
-        "resposta": res,
-        "alternativas": list(alternativas)
-    }
+def nova_pergunta():
+global pergunta_atual
+a, b = aluno.gerar_pergunta()
+pergunta_atual = (a, b)
+return f"Quanto é {a} + {b}?", a + b
 
-def responder(op, correta, resposta):
-    acerto = correta == resposta
-    estado.historico[op].append(acerto)
 
-    if len(estado.historico[op]) >= 5:
-        if estado.historico[op][-5:].count(True) >= 4:
-            estado.nivel[op] += 1
-
-    estado.salvar()
-    return acerto
+def verificar(resposta):
+correta = pergunta_atual[0] + pergunta_atual[1]
+return aluno.responder(resposta, correta), aluno.nivel
